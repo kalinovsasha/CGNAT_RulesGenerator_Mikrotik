@@ -104,7 +104,8 @@
             printRules.textContent="/interface bridge\n";
             printRules.textContent+=`add name=CGNAT_IP_${ip}\n`;
             printRules.textContent+=`/ip address\n`;
-            printRules.textContent+=`add address=${ip} comment=CGNAT interface=CGNAT_IP_${ip} network=${ip}\n\n`;
+            printRules.textContent+=`add address=${ip} comment=CGNAT interface=CGNAT_IP_${ip} network=${ip}\n`;
+            printRules.textContent+=`/ip firewall filter\nadd action=drop chain=input dst-address=${ip}\n\n`;
             }
         printRules.textContent+=`/ip firewall nat \n`
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork}/27 src-address=${NatNetwork}/27 \n\n`
