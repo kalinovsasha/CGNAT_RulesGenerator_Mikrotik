@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikrotik NAT rules generator</title>
+    <style>
+        .main{
+            background-color: cadetblue;
+            min-width:700px;
+            max-width: 100%;
+            height: 2800px;
+            margin: 0 auto;
+        }
+        .text1{
+            width: 800px;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 auto;
+            margin-bottom: 50px;
+        }
+        label{
+            margin: 15px auto;
+            font-size: 30px;
+            font-weight: 500;
+            width: 700px;
+            display: flex;
+            justify-content: space-between;
+        }
+        input{
+            font-size: 30px;
+        }
+        label:hover {
+            color: rgb(189, 34, 34);
+            transition: .5s;
+        }
+        .cont{
+            margin: 0 auto;
+            width: 800px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .printRules{
+            margin: 0 auto;
+            width: 800px;
+            height: 1500px;
+            font-size: 18px;
+        }
+        .send{
+            font-size: 30px;
+            width: 150px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .send:hover{
+            background-color: rgb(238, 76, 76);
+            transition: .5s;
+        }
+        .chck{
+            font-size: 24px;
+        }
+        .ipAdd{
+            width: 30px;
+            height: 30px;
+        }
+        a{
+            font-size: 20px;
+            text-decoration: none;
+            color: blue;
+        }
+        a:hover{
+            transition: .3s;
+            font-size: 21px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="text1">Генератор CGNAT правил для Mikrotik</div>
+            <div class="cont">
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr0" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr1" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr2" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr3" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr4" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr5" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr6" type="text"></Label>
+                <Label class="whiteIp">Белый Ip <input id="whiteIpAddr7" type="text"></Label>
+                <Label class="NatNetwork">Серая подсеть Ip/27<input id="NatNetwork" type="text"></Label>
+                <div class="checkBoxGroup">
+                    <label class="chck">Добавить Jump chain=srcnat jump-target=IP/24 <input type="checkbox" class="ipAdd" name="ip" id="addR"></label>
+                </div>
+                <input id="elem" type="button"  class="send" value="Создать">
+                <a id="saveFile" href=#>Сохранить в файл</a>
+                <textarea class="printRules" id="txtAr"></textarea>
+            </div>
+    </div>
+</body>
+<script>
+    let checkbox = document.getElementById("addR");
+    let printRules=document.getElementById("txtAr");
+    let NatNetwork="default";
+    
+    document.getElementById("saveFile").onclick = function() {
+    let text = textContent;
+    let csvData = 'data:application/txt;charset=utf-8,' + text;
+    this.href = csvData;
+    this.target = '_blank';
+    this.download = `config_${NatNetwork}.rsc`;
+    }
+    
+    elem.onclick = function() {
+        textContent="";
+        textContent="";
+        let indexDot=0;
+        let startNumber=0;
+        let lastNumber=0;
+        let ip = [];
+        ip[0]=document.querySelector("#whiteIpAddr0").value;
+        ip[1]=document.querySelector("#whiteIpAddr1").value;
+        ip[2]=document.querySelector("#whiteIpAddr2").value;
+        ip[3]=document.querySelector("#whiteIpAddr3").value;
+        ip[4]=document.querySelector("#whiteIpAddr4").value;
+        ip[5]=document.querySelector("#whiteIpAddr5").value;
+        ip[6]=document.querySelector("#whiteIpAddr6").value;
+        ip[7]=document.querySelector("#whiteIpAddr7").value;
+        NatNetwork=document.querySelector("#NatNetwork").value;
+        let count=1;
+        let portStart=2000;
+        let portEnd=4000;
+        //Вычисляем последную цифру ип адреса
+        for (let i = 0; i < 3; i++){
+            indexDot=NatNetwork.indexOf(".",indexDot)+1;
+            }
+        lastNumber=Number(NatNetwork.slice(indexDot));
+        ////Вывод правил в textbox
+            textContent="/interface bridge\n";
+            textContent+=`add name=CGNAT_IP_${ip[0]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[1]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[2]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[3]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[4]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[5]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[6]}\n`;
+            textContent+=`add name=CGNAT_IP_${ip[7]}\n`;
+            textContent+=`/ip address\n`;
+            textContent+=`add address=${ip[0]} comment=CGNAT interface=CGNAT_IP_${ip[0]} network=${ip[0]}\n`;
+            textContent+=`add address=${ip[1]} comment=CGNAT interface=CGNAT_IP_${ip[1]} network=${ip[1]}\n`;
+            textContent+=`add address=${ip[2]} comment=CGNAT interface=CGNAT_IP_${ip[2]} network=${ip[2]}\n`;
+            textContent+=`add address=${ip[3]} comment=CGNAT interface=CGNAT_IP_${ip[3]} network=${ip[3]}\n`;
+            textContent+=`add address=${ip[4]} comment=CGNAT interface=CGNAT_IP_${ip[4]} network=${ip[4]}\n`;
+            textContent+=`add address=${ip[5]} comment=CGNAT interface=CGNAT_IP_${ip[5]} network=${ip[5]}\n`;
+            textContent+=`add address=${ip[6]} comment=CGNAT interface=CGNAT_IP_${ip[6]} network=${ip[6]}\n`;
+            textContent+=`add address=${ip[7]} comment=CGNAT interface=CGNAT_IP_${ip[7]} network=${ip[7]}\n`;
+            textContent+=`/ip firewall filter\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[0]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[1]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[2]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[3]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[4]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[5]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[6]}\n`;
+            textContent+=`add action=drop chain=input dst-address=${ip[7]}\n\n`;
+            
+        textContent+=`/ip firewall nat \n`;
+         //Проверка нажат ли чекбокс
+         if(checkbox.checked){
+            textContent+=`add action=jump chain=srcnat jump-target=pool_${NatNetwork}/24 src-address=${NatNetwork}/24\n`;
+        }
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}0/27 src-address=${NatNetwork.slice(0,indexDot)}0/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}32/27 src-address=${NatNetwork.slice(0,indexDot)}32/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}64/27 src-address=${NatNetwork.slice(0,indexDot)}64/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}96/27 src-address=${NatNetwork.slice(0,indexDot)}96/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}128/27 src-address=${NatNetwork.slice(0,indexDot)}128/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}160/27 src-address=${NatNetwork.slice(0,indexDot)}160}/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}192/27 src-address=${NatNetwork.slice(0,indexDot)}192/27 \n`;
+        textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}224/27 src-address=${NatNetwork.slice(0,indexDot)}224/27 \n\n`;
+        //Генерация NAt правил
+            for (let j = 0; j<8; j++) {
+                for (let i = lastNumber; i <lastNumber+ 32; i++) {
+                    textContent+=`add action=src-nat chain=pool_${NatNetwork.slice(0,indexDot)}${startNumber}/27  protocol=tcp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip[j]} to-ports=${portStart}-${portEnd} \n`;
+                    textContent+=`add action=src-nat chain=pool_${NatNetwork.slice(0,indexDot)}${startNumber}/27  protocol=udp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip[j]} to-ports=${portStart}-${portEnd}\n\n`;
+                    count++;
+                    portStart=portEnd+1;
+                    portEnd=portEnd+1900;
+                    }
+                startNumber=startNumber+32;
+                lastNumber=lastNumber+32;
+                count=1;
+                portStart=2000;
+                portEnd=4000;
+            }
+            printRules.textContent=textContent;
+    };
+</script>
+</html>
