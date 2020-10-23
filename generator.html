@@ -111,8 +111,8 @@
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork}/27 src-address=${NatNetwork}/27 \n\n`
         //Генерация NAt правил
         for (let i = lastNumber; i <lastNumber+ 32; i++) {
-            printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork}/27 log=yes protocol=tcp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip} to-ports=${portStart}-${portEnd} \n`;
-            printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork}/27 log=yes protocol=udp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip} to-ports=${portStart}-${portEnd}\n\n`;
+            printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork}/27  protocol=tcp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip} to-ports=${portStart}-${portEnd} \n`;
+            printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork}/27  protocol=udp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip} to-ports=${portStart}-${portEnd}\n\n`;
             count++;
             portStart=portEnd+1;
             portEnd=portEnd+1900;
