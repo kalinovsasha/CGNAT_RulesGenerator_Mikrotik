@@ -142,7 +142,7 @@
             printRules.textContent+=`add action=drop chain=input dst-address=${ip[4]}\n`;
             printRules.textContent+=`add action=drop chain=input dst-address=${ip[5]}\n`;
             printRules.textContent+=`add action=drop chain=input dst-address=${ip[6]}\n`;
-            printRules.textContent+=`add action=drop chain=input dst-address=${ip[7]}\n\n`;
+            printRules.textContent+=`add action=drop chain=input dst-address=${ip[7]}\n`;
             
         printRules.textContent+=`/ip firewall nat \n`;
          //Проверка нажат ли чекбокс
@@ -154,14 +154,14 @@
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}64/27 src-address=${NatNetwork.slice(0,indexDot)}64/27 \n`;
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}96/27 src-address=${NatNetwork.slice(0,indexDot)}96/27 \n`;
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}128/27 src-address=${NatNetwork.slice(0,indexDot)}128/27 \n`;
-        printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}160/27 src-address=${NatNetwork.slice(0,indexDot)}160}/27 \n`;
+        printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}160/27 src-address=${NatNetwork.slice(0,indexDot)}160/27 \n`;
         printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}192/27 src-address=${NatNetwork.slice(0,indexDot)}192/27 \n`;
-        printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}224/27 src-address=${NatNetwork.slice(0,indexDot)}224/27 \n\n`;
+        printRules.textContent+=`add action=jump chain=pool_${NatNetwork.slice(0,indexDot)}0/24 jump-target=pool_${NatNetwork.slice(0,indexDot)}224/27 src-address=${NatNetwork.slice(0,indexDot)}224/27 \n`;
         //Генерация NAt правил
             for (let j = 0; j<8; j++) {
                 for (let i = lastNumber; i <lastNumber+ 32; i++) {
                     printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork.slice(0,indexDot)}${startNumber}/27  protocol=tcp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip[j]} to-ports=${portStart}-${portEnd} \n`;
-                    printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork.slice(0,indexDot)}${startNumber}/27  protocol=udp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip[j]} to-ports=${portStart}-${portEnd}\n\n`;
+                    printRules.textContent+=`add action=src-nat chain=pool_${NatNetwork.slice(0,indexDot)}${startNumber}/27  protocol=udp src-address=${NatNetwork.slice(0,indexDot)}${i} to-addresses=${ip[j]} to-ports=${portStart}-${portEnd}\n`;
                     count++;
                     portStart=portEnd+1;
                     portEnd=portEnd+1900;
